@@ -8,7 +8,7 @@ class AVLNode:
         self.size = 1
 
 
-class AVL:
+class OSAVL:
     def __init__(self):
         self.root = None
 

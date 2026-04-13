@@ -6,7 +6,7 @@ class OrderedListNode:
         self.prev = None
 
 
-class OrderedList():
+class OSOrderedList():
     def __init__(self):
         self.head = None
 

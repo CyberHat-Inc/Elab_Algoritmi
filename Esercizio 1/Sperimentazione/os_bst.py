@@ -5,7 +5,7 @@ class BSTNode:
         self.right = None
         self.parent = None
 
-class BST:
+class OSBST:
     def __init__(self):
         self.root = None
 
