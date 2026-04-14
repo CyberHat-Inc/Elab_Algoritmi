@@ -1,6 +1,6 @@
 \documentclass{article}
 \usepackage[utf8]{inputenc}
-\usepackage[a4paper,left=3.5cm,right=3.5cm,top=2cm,bottom=2cm]{geometry}
+\usepackage[a4paper,left=2cm,right=2cm,top=3cm,bottom=2.3cm]{geometry}
 \usepackage{babel}
 \babelprovide[import, main]{italian}
 \usepackage{csquotes}
@@ -8,8 +8,9 @@
 \usepackage{stfloats,amsthm,chngpage,times,lipsum,lastpage}
 \usepackage{calc,listings,color,wrapfig,tabularx,longtable,enumitem}
 \usepackage{multirow,caption,subcaption,xcolor,tcolorbox,float}
-\usepackage{svg}
 \definecolor{shadecolor}{rgb}{0.86,0.86,0.86}
+\usepackage[hidelinks]{hyperref}
+\usepackage{bookmark}
 
 \pagestyle{fancy}
 \fancypagestyle{plain}{
@@ -21,13 +22,24 @@
 \author{Neri Saldutti}
 
 \begin{document}
+	\pagenumbering{gobble}
 	\include{sections/title}
+	
+	\clearpage
+	\pagenumbering{roman}
+	
 	\fancyhf{}
 	\fancyhead[L]{Neri Saldutti}
 	\fancyhead[R]{Laboratorio di Algoritmi e Strutture Dati}
-	\fancyfoot[C]{\large\bfseries\thepage}
-	\newpage
+	\fancyfoot[C]{\large\thepage}
+	
+	\pdfbookmark[1]{Tabella dei Contenuti}{toc}
 	\tableofcontents
 	\listoffigures
-	\newpage
+	
+	\clearpage
+	\pagenumbering{arabic}
+	
+	\include{sections/content}
+	
 \end{document}
