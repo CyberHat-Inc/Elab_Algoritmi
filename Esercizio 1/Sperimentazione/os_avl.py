@@ -131,6 +131,11 @@ class OSAVL:
             node = node.left
         return node
 
+    def _max(self, node):
+        while node.right is not None:
+            node = node.right
+        return node
+
     def print(self):
         self.inorder_tree_walk()
 

@@ -113,8 +113,8 @@ class OSBST:
             return 0
         return 1 + self._size(node.left) + self._size(node.right)
 
-    def select(self, x):
-        return self._select(self.root, x)
+    def select(self, i):
+        return self._select(self.root, i)
 
     def _select(self, node, i):
         if node is None:
