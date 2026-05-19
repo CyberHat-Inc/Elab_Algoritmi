@@ -1,0 +1,109 @@
+\section{Fondamenti teorici}
+\subsection{Statistiche d'ordine dinamiche}
+
+Le strutture dati aumentate, estendono una struttura dati esistente, ad esempio aggiungendo nuovi attributi ai suoi nodi, in modo da poter implementare in maniera efficiente nuovi metodi.
+
+Le statistiche d'ordine dinamiche sono delle particolari strutture dati aumentate che consentono di introdurre due funzionalità principali:
+\begin{itemize}
+	\item \texttt{OS-SELECT(i)} che ritorna il nodo con l'\textit{i-esima} chiave più piccola,
+	\item \texttt{OS-RANK(x)} che ritorna il rango di un determinato nodo rispetto ad un attraversamento ordinato della struttura.
+\end{itemize}
+
+Questa relazione si concentra in particolare sull'analisi delle operazioni di \textit{inserimento}, \textit{eliminazione}, \textit{ranking} e \textit{selezione}.
+
+\subsection{Prestazioni attese}
+Le prestazioni delle operazioni considerate dipendono dalla struttura dati sottostante e delle scelte implementative adottate. Di seguito vengono analizzate le diverse implementazioni, concentrandosi in particolare sul caso peggiore, il caso medio e il caso migliore.
+
+\subsubsection*{Lista Ordinata}
+Una lista ordinata è una struttura dati che mantiene i suoi elementi in ordine, in questo caso crescente. Il costo delle singole operazioni dipende dalla posizione dell'elemento su cui si vuole operare e, di conseguenza, dalla modalità con cui si implementa la ricerca di un elemento. Assumiamo una ricerca lineare.
+
+Considerata una lita di $n$ elementi, nel caso migliore l'operazione coinvolge solamente il primo elemento della struttura e si avrà quindi una complessità di $\Theta(1)$.  Nel caso peggiore, invece, è necessario scorrere fino all'ultimo elemento e la complessità sarà dunque $\Theta(n)$. 
+
+L'analisi del caso medio richiede invece un'analisi probabilistica. Assumendo che i dati in input siano distribuiti in maniera uniforme, in media sarà necessario scorrere circa $\frac{n}{2}$ elementi, risultando in una complessità di $\Theta(n)$.
+
+Per le specifiche operazioni si rimanda alla Tabella \ref{tab:complessita_lista_ordinata}.
+
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{ |c||c|c|c|  }
+		\hhline{~---}
+		\multicolumn{1}{c|}{} & Caso peggiore & Caso medio & Caso migliore \\
+		\hline
+		Inserimento & $\Theta(n)$ & $\Theta(n)$ & $\Theta(1)$\\
+		\hline
+		Eliminazione & $\Theta(n)$ & $\Theta(n)$ & $\Theta(1)$\\
+		\hline
+		Ricerca & $\Theta(n)$ & $\Theta(n)$ & $\Theta(1)$\\
+		\hline
+		Ranking & $\Theta(n)$ & $\Theta(n)$ & $\Theta(1)$\\
+		\hline
+		Selezione & $\Theta(n)$ & $\Theta(n)$ & $\Theta(1)$\\
+		\hline
+	\end{tabular}
+	\caption{Complessità teorica di una lista ordinata}
+	\label{tab:complessita_lista_ordinata}
+\end{table}
+
+
+\subsubsection*{Albero Binario di Ricerca}
+Un albero binario di ricerca, comunemente abbreviato con ABR o, dall'inglese, BST (\textit{Binary Search Tree}), è una struttura dati costituita da nodi organizzati gerarchicamente. Ogni albero ha un nodo detto \textit{radice} (\texttt{root}) che rappresenta l'inizio della struttura.
+
+Ogni nodo presenta tre puntatori: uno al figlio destro, uno al figlio sinistro e uno al nodo genitore, organizzati in modo tale che tutte le chiavi appartenenti al sottoalbero sinistro di un nodo siano minori della chiave del nodo stesso, mentre tutte le chiavi appartenenti al sottoalbero destro siano maggiori.
+
+La complessità di un ABR dipende dunque dalla sua struttura interna e in particolare dalla sua altezza $h$, definita come il numero di archi presenti nel cammino più lungo dalla radice a una foglia (ossia un figlio nullo). L'altezza è a sua volta influenzata dall'ordine di inserimento degli elementi. Nel caso peggiore ogni nodo avrà solamente un figlio e si avrà dunque $h = n-1$. Nel caso migliore invece si avrà un albero perfettamente bilanciato e l'altezza sarà $h = \lg(n)$.
+
+Per le specifiche operazioni si rimanda alla Tabella \ref{tab:complessita_albero_binario_ricerca}.
+
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{ |c||c|c|c|  }
+		\hhline{~---}
+		\multicolumn{1}{c|}{} & Caso peggiore & Caso medio & Caso migliore \\
+		\hline
+		Inserimento & $\Theta(n)$ & $\Theta(\lg n)$ & $\Theta(1)$\\
+		\hline
+		Eliminazione & $\Theta(n)$ & $\Theta(\lg n)$ & $\Theta(1)$\\
+		\hline
+		Ricerca & $\Theta(n)$ & $\Theta(\lg n)$ & $\Theta(1)$\\
+		\hline
+		Ranking & $\Theta(n)$ & $\Theta(\lg n)$ & $\Theta(1)$\\
+		\hline
+		Selezione & $\Theta(n)$ & $\Theta(\lg n)$ & $\Theta(1)$\\
+		\hline
+	\end{tabular}
+	\caption{Complessità teorica di un ABR con statistiche d'ordine}
+	\label{tab:complessita_albero_binario_ricerca}
+\end{table}
+
+\subsubsection*{Albero AVL}
+Un albero AVL è un albero binario di ricerca bilanciato in cui, per ogni nodo, le altezze dei sottoalberi sinistro e destro differiscono al più di un’unità.
+
+In un AVL, l’altezza di un nodo è definita come il numero di archi presenti nel cammino più lungo che collega il nodo a una foglia. Grazie al vincolo di bilanciamento, si può dimostrare che un AVL contenente $n$ nodi ha altezza $h \leq 2 \lg(n + 1)$. Di conseguenza, tutte le operazioni che non modificano la struttura dell’albero presentano complessità logaritmica.
+
+Per mantenere tale proprietà di bilanciamento, gli alberi AVL introducono particolari operazioni di ristrutturazione, dette \textit{rotazioni}. In particolare, si distinguono le operazioni \texttt{LEFT-ROTATE}, che effettua una rotazione verso sinistra, e \texttt{RIGHT-ROTATE}, che effettua una rotazione verso destra.
+
+Lo scopo di queste operazioni è mantenere il \textit{Fattore di Bilanciamento} (\textit{Balance Factor}) di ogni nodo, calcolato come differenza delle altezze tra il sottoalbero destro e sinistro, compreso tra $-1$ e $1$.
+
+Per le complessità delle specifiche operazioni si rimanda alla Tabella \ref{tab:complessita_albero_avl}.
+
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{ |c||c|c|c|  }
+		\hhline{~---}
+		\multicolumn{1}{c|}{} & Caso peggiore & Caso medio & Caso migliore \\
+		\hline
+		Inserimento & $\Theta(\lg n)$ & $\Theta(\lg n)$ & $\Theta(1)$\\
+		\hline
+		Eliminazione & $\Theta(\lg n)$ & $\Theta(\lg n)$ & $\Theta(1)$\\
+		\hline
+		Ricerca & $\Theta(\lg n)$ & $\Theta(\lg n)$ & $\Theta(1)$\\
+		\hline
+		Ranking & $\Theta(\lg n)$ & $\Theta(\lg n)$ & $\Theta(1)$\\
+		\hline
+		Selezione & $\Theta(\lg n)$ & $\Theta(\lg n)$ & $\Theta(1)$\\
+		\hline
+	\end{tabular}
+	\caption{Complessità teorica di un AVL con statistiche d'ordine}
+	\label{tab:complessita_albero_avl}
+\end{table}
+\newpage

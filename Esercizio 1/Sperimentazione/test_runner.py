@@ -1,8 +1,8 @@
-import math
-import numpy as np
 import random
 import sys
 from timeit import default_timer as timer
+
+import numpy as np
 
 from os_avl import OSAVL
 from os_bst import OSBST
@@ -10,11 +10,9 @@ from os_ordered_list import OSOrderedList
 from plot_results import plot
 from plot_results import save_csv
 
-sys.setrecursionlimit(10 ** 9)
-
 
 def random_values(size):
-    return random.sample(range(1, 10_000_001), k=size)
+    return random.sample(range(1, 10_00_000), k=size)
 
 
 def ordered_values(size):
@@ -41,21 +39,18 @@ def select_elements(struct, seq):
         struct.select(i)
 
 
-def test_casual_input(size, steps, repetitions):
+def test_casual_input(size, step, repetitions):
     test_name = 'test_casual_input'
     rows = []
 
-    max_seq = random_values(size * steps)
-
-    for i in range(steps):
-        x = size * (i + 1)
-        seq = max_seq[:x]
-
+    for i in range(step, size + 1, step):
         times_os_ordered_list = []
         times_os_bst = []
         times_os_avl = []
 
         for j in range(repetitions):
+            seq = random_values(i)
+
             os_bst = OSBST()
             os_avl = OSAVL()
             os_ordered_list = OSOrderedList()
@@ -75,23 +70,22 @@ def test_casual_input(size, steps, repetitions):
             end = timer()
             times_os_ordered_list.append(end - start)
 
-        rows.append(['OS_BST', x, np.mean(times_os_bst)])
-        rows.append(['OS_AVL', x, np.mean(times_os_avl)])
-        rows.append(['OS_Ordered_List', x, np.mean(times_os_ordered_list)])
+        rows.append(['OS_BST', i, np.median(times_os_bst) / i])
+        rows.append(['OS_AVL', i, np.median(times_os_avl) / i])
+        rows.append(['OS_Ordered_List', i, np.median(times_os_ordered_list) / i])
 
     save_csv(test_name, rows)
     plot(test_name)
 
 
-def test_ordered_input(size, steps, repetitions):
+def test_ordered_input(size, step, repetitions):
     test_name = 'test_linear_input'
     rows = []
 
-    max_seq = ordered_values(size * steps)
+    max_seq = ordered_values(size)
 
-    for i in range(steps):
-        x = size * (i + 1)
-        seq = max_seq[:x]
+    for i in range(step, size + 1, step):
+        seq = max_seq[:i]
 
         times_os_ordered_list = []
         times_os_bst = []
@@ -117,39 +111,36 @@ def test_ordered_input(size, steps, repetitions):
             end = timer()
             times_os_ordered_list.append(end - start)
 
-        rows.append(['OS_BST', x, np.mean(times_os_bst)])
-        rows.append(['OS_AVL', x, np.mean(times_os_avl)])
-        rows.append(['OS_Ordered_List', x, np.mean(times_os_ordered_list)])
+        rows.append(['OS_BST', i, np.median(times_os_bst) / i])
+        rows.append(['OS_AVL', i, np.median(times_os_avl) / i])
+        rows.append(['OS_Ordered_List', i, np.median(times_os_ordered_list) / i])
 
     save_csv(test_name, rows)
     plot(test_name)
 
 
-def test_casual_deletion(size, steps, repetitions):
+def test_casual_deletion(size, step, repetitions):
     test_name = 'test_casual_deletion'
     rows = []
 
-    max_seq = random_values(size * steps)
-
-    for i in range(steps):
-        x = size * (i + 1)
-
-        seq = max_seq[:x]
-        del_seq = random.sample(seq, x //2)
+    for i in range(step, size + 1, step):
+        seq = random_values(i)
 
         times_os_ordered_list = []
         times_os_bst = []
         times_os_avl = []
 
         for j in range(repetitions):
+            del_seq = random.sample(seq, i // 2)
+
             os_bst = OSBST()
             os_avl = OSAVL()
             os_ordered_list = OSOrderedList()
 
             # Popolo le strutture
-            insert_elements(os_bst, max_seq[:x])
-            insert_elements(os_avl,  max_seq[:x])
-            insert_elements(os_ordered_list, max_seq[:x])
+            insert_elements(os_bst, seq)
+            insert_elements(os_avl, seq)
+            insert_elements(os_ordered_list, seq)
 
             start = timer()
             delete_elements(os_bst, del_seq)
@@ -166,38 +157,36 @@ def test_casual_deletion(size, steps, repetitions):
             end = timer()
             times_os_ordered_list.append(end - start)
 
-        rows.append(['OS_BST', x, np.mean(times_os_bst)])
-        rows.append(['OS_AVL', x, np.mean(times_os_avl)])
-        rows.append(['OS_Ordered_List', x, np.mean(times_os_ordered_list)])
+        rows.append(['OS_BST', i, np.median(times_os_bst) / (i // 2)])
+        rows.append(['OS_AVL', i, np.median(times_os_avl) / (i // 2)])
+        rows.append(['OS_Ordered_List', i, np.median(times_os_ordered_list) / (i // 2)])
 
     save_csv(test_name, rows)
     plot(test_name)
 
 
-def test_casual_ranking(size, steps, repetitions):
+def test_casual_ranking(size, step, repetitions):
     test_name = 'test_casual_rank'
     rows = []
 
-    max_seq = random_values(size * steps)
-
-    for i in range(steps):
-        x = size * (i + 1)
-        seq = max_seq[:x]
-        rank_seq = random.sample(seq, x // 2)
+    for i in range(step, size + 1, step):
+        seq = random_values(i)
 
         times_os_ordered_list = []
         times_os_bst = []
         times_os_avl = []
 
         for j in range(repetitions):
+            rank_seq = random.sample(seq, i // 2)
+
             os_bst = OSBST()
             os_avl = OSAVL()
             os_ordered_list = OSOrderedList()
 
             # Popolo le strutture
-            insert_elements(os_bst,  max_seq[:x])
-            insert_elements(os_avl, max_seq[:x])
-            insert_elements(os_ordered_list,  max_seq[:x])
+            insert_elements(os_bst, seq)
+            insert_elements(os_avl, seq)
+            insert_elements(os_ordered_list, seq)
 
             start = timer()
             rank_elements(os_bst, rank_seq)
@@ -214,23 +203,21 @@ def test_casual_ranking(size, steps, repetitions):
             end = timer()
             times_os_ordered_list.append(end - start)
 
-        rows.append(['OS_BST', x, np.mean(times_os_bst)])
-        rows.append(['OS_AVL', x, np.mean(times_os_avl)])
-        rows.append(['OS_Ordered_List', x, np.mean(times_os_ordered_list)])
+        rows.append(['OS_BST', i, np.median(times_os_bst) / (i // 2)])
+        rows.append(['OS_AVL', i, np.median(times_os_avl) / (i // 2)])
+        rows.append(['OS_Ordered_List', i, np.median(times_os_ordered_list) / (i // 2)])
 
     save_csv(test_name, rows)
     plot(test_name)
 
 
-def test_casual_selection(size, steps, repetitions):
+def test_casual_selection(size, step, repetitions):
     test_name = 'test_casual_selection'
     rows = []
 
-    max_seq = random_values(size * steps)
-
-    for i in range(steps):
-        x = size * (i + 1)
-        select_seq = [random.randint(1, x) for _ in range(x // 2)]
+    for i in range(step, size + 1, step):
+        seq = random_values(i)
+        select_seq = [random.randint(1, i) for _ in range(i // 2)]
 
         times_os_ordered_list = []
         times_os_bst = []
@@ -242,9 +229,9 @@ def test_casual_selection(size, steps, repetitions):
             os_ordered_list = OSOrderedList()
 
             # Popolo le strutture
-            insert_elements(os_bst,  max_seq[:x])
-            insert_elements(os_avl,  max_seq[:x])
-            insert_elements(os_ordered_list,  max_seq[:x])
+            insert_elements(os_bst, seq)
+            insert_elements(os_avl, seq)
+            insert_elements(os_ordered_list, seq)
 
             start = timer()
             select_elements(os_bst, select_seq)
@@ -261,29 +248,27 @@ def test_casual_selection(size, steps, repetitions):
             end = timer()
             times_os_ordered_list.append(end - start)
 
-        rows.append(['OS_BST', x, np.mean(times_os_bst)])
-        rows.append(['OS_AVL', x, np.mean(times_os_avl)])
-        rows.append(['OS_Ordered_List', x, np.mean(times_os_ordered_list)])
+        rows.append(['OS_BST', i, np.median(times_os_bst) / (i // 2)])
+        rows.append(['OS_AVL', i, np.median(times_os_avl) / (i // 2)])
+        rows.append(['OS_Ordered_List', i, np.median(times_os_ordered_list) / (i // 2)])
 
     save_csv(test_name, rows)
     plot(test_name)
 
 
-def run_all_tests(size, steps, repetitions):
-    test_casual_input(size, steps, repetitions)
-    test_ordered_input(size, steps, repetitions)
-    test_casual_deletion(size, steps, repetitions)
-    test_casual_ranking(size, steps, repetitions)
-    test_casual_selection(size, steps, repetitions)
+def run_all_tests(size, step, repetitions):
+    test_casual_input(size, step, repetitions)
+    test_ordered_input(size, step, repetitions)
+    test_casual_deletion(size, step, repetitions)
+    test_casual_ranking(size, step, repetitions)
+    test_casual_selection(size, step, repetitions)
 
 
 def main():
-    size = 500
-    steps = 20
-    repetitions = 5
-    run_all_tests(size, steps, repetitions)
-
-
+    size = 3000
+    step = 100
+    repetitions = 15
+    run_all_tests(size, step, repetitions)
 
 
 main()
